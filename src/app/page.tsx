@@ -1,5 +1,6 @@
 import Banner from "@/components/Banner";
 import Image from "next/image";
+import AllProducts from "@/components/AllProducts"
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
     // </div>
     <div>
       <Banner></Banner>
+      <AllProducts/>
     </div>
   );
 }
