@@ -2,6 +2,7 @@ import Banner from "@/components/Banner";
 import Image from "next/image";
 import AllProducts from "@/components/AllProducts"
 import PriceIncreasedProducts from "@/components/PriceIncreasedProducts"
+import PriceDecreasedProducts from "@/components/PriceDecreasedProducts"
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
     <div>
       <Banner />
       <PriceIncreasedProducts/>
+      <PriceDecreasedProducts />
       <AllProducts />
     </div>
   );
