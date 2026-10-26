@@ -1,6 +1,7 @@
 import Banner from "@/components/Banner";
 import Image from "next/image";
 import AllProducts from "@/components/AllProducts"
+import PriceIncreasedProducts from "@/components/PriceIncreasedProducts"
 
 export default function Home() {
   return (
@@ -8,8 +9,9 @@ export default function Home() {
     //   চাল, ডাল, তেল, সবজি, মাছ, মাংস, ডিম ও মসলার দাম — বাজারভিত্তিক বিস্তারিত, গড়, সর্বনিম্ন-সর্বাধিক এবং দামের পরিবর্তন এক জায়গায়।
     // </div>
     <div>
-      <Banner></Banner>
-      <AllProducts/>
+      <Banner />
+      <PriceIncreasedProducts/>
+      <AllProducts />
     </div>
   );
 }

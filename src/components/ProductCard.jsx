@@ -7,7 +7,7 @@ const toBengaliNumerals = (num) => {
   return num.toString().replace(/\d/g, (digit) => bnNums[digit]);
 };
 
-// Unit mapping helper
+// Unit formatting helper
 const formatUnit = (unit) => {
   if (unit === 'kg') return 'প্রতি কেজি';
   if (unit === 'litre' || unit === 'liter') return 'প্রতি লিটার';
@@ -18,11 +18,15 @@ const ProductCard = ({ product }) => {
   const name = product.nameBn || 'পণ্য';
   const unit = formatUnit(product.unit);
   const price = product.today || 0;
+  
   const changeData = product.change || {};
-  const changePct = changeData.pct || 0;
-  const isUp = changeData.dir === 'up';
-  const icon = product.categoryIcon || product.image || '🛒';
+  const changePct = Number(changeData.pct) || 0;
+  
+  // Determine direction: check dir property or number sign
+  const isUp = changeData.dir === 'up' || changePct > 0;
+  const isDown = changeData.dir === 'down' || changePct < 0;
 
+  // Always display absolute percentage value formatted in Bengali
   const formattedPercent = toBengaliNumerals(Math.abs(changePct).toFixed(1));
 
   return (
@@ -30,7 +34,7 @@ const ProductCard = ({ product }) => {
       {/* Card Top: Icon + Name/Unit */}
       <div className="flex items-center gap-3.5 mb-6">
         <div className="w-12 h-12 bg-[#f4f6f3] rounded-full flex items-center justify-center text-2xl flex-shrink-0">
-          {icon}
+          {product.categoryIcon || product.image || '🛒'}
         </div>
         <div>
           <h3 className="text-lg font-bold text-gray-900 leading-snug">{name}</h3>
@@ -48,16 +52,21 @@ const ProductCard = ({ product }) => {
         </div>
 
         <div>
-          {isUp && changePct > 0 && (
+          {/* Price Increased (Red Badge) */}
+          {isUp && changePct !== 0 && (
             <span className="inline-flex items-center gap-1 bg-[#fde8e8] text-[#e02424] px-2.5 py-1 rounded-full text-xs font-semibold">
               ▲ {formattedPercent}%
             </span>
           )}
-          {!isUp && changePct > 0 && (
+
+          {/* Price Decreased (Green Badge) */}
+          {isDown && changePct !== 0 && (
             <span className="inline-flex items-center gap-1 bg-[#edf7ed] text-[#0e9f6e] px-2.5 py-1 rounded-full text-xs font-semibold">
               ▼ {formattedPercent}%
             </span>
           )}
+
+          {/* Price Unchanged (Gray Badge) */}
           {changePct === 0 && (
             <span className="inline-flex items-center gap-1 bg-[#f3f4f6] text-[#6b7280] px-2.5 py-1 rounded-full text-xs font-semibold">
               — {toBengaliNumerals('0.0')}%

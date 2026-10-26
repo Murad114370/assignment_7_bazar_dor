@@ -7,8 +7,8 @@ const Header = () => {
     });
 
     return (
-        <header className="container mx-auto mt-4 px-4 sm:mt-6 sm:px-6 lg:mt-7 lg:px-8">
-            <div className="flex items-center justify-between gap-3 sm:gap-4">
+        <header className=" mt-4 px-4 sm:mt-6 sm:px-6 lg:mt-7 lg:px-8">
+            <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 sm:gap-4">
 
                 {/* Logo and Brand */}
                 <div className="flex items-center gap-2.5 sm:gap-3.5">

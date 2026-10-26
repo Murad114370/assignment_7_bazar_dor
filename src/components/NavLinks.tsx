@@ -13,7 +13,7 @@ const NavLinks = async() => {
     const data: Navs[] = await res.json()
     // console.log(data);
     return (
-        <div className="flex gap-7 mt-5">
+        <div className="max-w-7xl mx-auto flex gap-7 mt-5">
             {
                 data.map((n, i) => <Link key={i} href={n.slug} >{n.icon}  {n.nameBn}</Link>)
             }

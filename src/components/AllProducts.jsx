@@ -54,8 +54,8 @@ const AllProducts = () => {
   }
 
   return (
-    <div className="bg-[#f2f5f1] min-h-screen p-6 md:p-10 font-['Hind_Siliguri']">
-      <div className="max-w-6xl mx-auto">
+    <div className="bg-[#f2f5f1] min-h-screen p-6 md:p-10 font-['Hind_Siliguri'] mt-8">
+      <div className="max-w-7xl mx-auto">
         
         {/* Header Section */}
         <header className="mb-6">
