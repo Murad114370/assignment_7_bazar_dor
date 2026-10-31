@@ -1,8 +1,9 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // 1. Import router
-import { authClient } from '@/lib/auth-client'; // 2. Import auth client
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
 import ProductCard from './ProductCard'; 
 
 const PriceIncreasedProducts = () => {
@@ -10,8 +11,8 @@ const PriceIncreasedProducts = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const router = useRouter(); // 3. Initialize router
-  const { data: session } = authClient.useSession(); // 4. Get session status
+  const router = useRouter();
+  const { data: session } = authClient.useSession();
   const user = session?.user;
 
   useEffect(() => {
@@ -42,14 +43,13 @@ const PriceIncreasedProducts = () => {
     fetchProducts();
   }, []);
 
-  // 5. Handle product card click logic
-  const handleCardClick = (product) => {
+  // Handle click logic: Blocks unauthenticated users and redirects to signup
+  const handleCardClick = (product, e) => {
+    const productId = product.id || product.slug;
+    
     if (!user) {
-      // If user is NOT logged in, redirect to sign-up page
-      router.push('/signup');
-    } else {
-      // If user IS logged in, go to product details or open modal
-      router.push(`/products/${product.id || product.slug}`);
+      e.preventDefault(); // Stop the link from opening the details page
+      router.push('/signup'); // Send to signup if not logged in
     }
   };
 
@@ -81,17 +81,20 @@ const PriceIncreasedProducts = () => {
 
         {/* Filtered Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {products.map((product, index) => (
-            <div 
-              key={product.id || product.slug || index} 
-              onClick={() => handleCardClick(product)}
-              className="cursor-pointer transition-transform hover:scale-[1.01]"
-            >
-              <ProductCard 
-                product={product} 
-              />
-            </div>
-          ))}
+          {products.map((product, index) => {
+            const productId = product.id || product.slug || index;
+
+            return (
+              <Link 
+                key={productId}
+                href={`/products/${productId}`}
+                onClick={(e) => handleCardClick(product, e)}
+                className="cursor-pointer transition-transform hover:scale-[1.01] block"
+              >
+                <ProductCard product={product} />
+              </Link>
+            );
+          })}
         </div>
 
       </div>

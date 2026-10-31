@@ -10,7 +10,7 @@ const Marquee = async () => {
 
     return (
         <div className="overflow-hidden whitespace-nowrap bg-white border-y py-2 border-none shadow-sm">
-            <MarqueeText direction="right" duration={15} className="py-1">
+            <MarqueeText direction="right" duration={10} className="py-1">
             <div className="inline-flex space-x-6 items-center">
                 {
                     products.map((d) => (
