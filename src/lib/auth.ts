@@ -6,12 +6,21 @@ const client = new MongoClient(process.env.MONGODB_URL as string);
 const db = client.db("bazar-dor");
 
 export const auth = betterAuth({
+    // Add baseURL here to ensure Better Auth knows your app's web domain
+    baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+
     emailAndPassword: {
         enabled: true
     },
 
-    database: mongodbAdapter(db, {
+    socialProviders: {
+        google: {
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+        },
+    },
 
+    database: mongodbAdapter(db, {
         client,
     }),
 });
