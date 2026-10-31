@@ -1,11 +1,18 @@
 "use client"
+
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation'; // 1. Import router
+import { authClient } from '@/lib/auth-client'; // 2. Import auth client
 import ProductCard from './ProductCard';
 
 const AllProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const router = useRouter(); // 3. Initialize router
+  const { data: session } = authClient.useSession(); // 4. Get session status
+  const user = session?.user;
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -29,6 +36,17 @@ const AllProducts = () => {
 
     fetchProducts();
   }, []);
+
+  // 5. Handle product card click logic
+  const handleCardClick = (product) => {
+    if (!user) {
+      // If user is NOT logged in, redirect to sign-up page
+      router.push('/signup');
+    } else {
+      // If user IS logged in, go to product details or proceed
+      router.push(`/products/${product.id || product.slug}`);
+    }
+  };
 
   // Bengali Number Conversion Utility
   const toBengaliNumerals = (num) => {
@@ -65,13 +83,18 @@ const AllProducts = () => {
           </p>
         </header>
 
-        {/* Products Grid Mapping */}
+        {/* Products Grid Mapping with Click Protection */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {products.map((product, index) => (
-            <ProductCard 
-              key={product.id || product.slug || index} 
-              product={product} 
-            />
+            <div 
+              key={product.id || product.slug || index}
+              onClick={() => handleCardClick(product)}
+              className="cursor-pointer transition-transform hover:scale-[1.01]"
+            >
+              <ProductCard 
+                product={product} 
+              />
+            </div>
           ))}
         </div>
 

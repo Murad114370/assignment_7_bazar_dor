@@ -1,12 +1,18 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import ProductCard from './ProductCard'; // Reusing your existing card component
+import { useRouter } from 'next/navigation'; // 1. Import router
+import { authClient } from '@/lib/auth-client'; // 2. Import auth client
+import ProductCard from './ProductCard'; 
 
 const PriceIncreasedProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const router = useRouter(); // 3. Initialize router
+  const { data: session } = authClient.useSession(); // 4. Get session status
+  const user = session?.user;
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -35,6 +41,17 @@ const PriceIncreasedProducts = () => {
 
     fetchProducts();
   }, []);
+
+  // 5. Handle product card click logic
+  const handleCardClick = (product) => {
+    if (!user) {
+      // If user is NOT logged in, redirect to sign-up page
+      router.push('/signup');
+    } else {
+      // If user IS logged in, go to product details or open modal
+      router.push(`/products/${product.id || product.slug}`);
+    }
+  };
 
   if (loading) {
     return (
@@ -65,10 +82,15 @@ const PriceIncreasedProducts = () => {
         {/* Filtered Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {products.map((product, index) => (
-            <ProductCard 
+            <div 
               key={product.id || product.slug || index} 
-              product={product} 
-            />
+              onClick={() => handleCardClick(product)}
+              className="cursor-pointer transition-transform hover:scale-[1.01]"
+            >
+              <ProductCard 
+                product={product} 
+              />
+            </div>
           ))}
         </div>
 

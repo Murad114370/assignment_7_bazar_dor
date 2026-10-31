@@ -5,9 +5,11 @@ import Header from "../components/Header";
 import Marquee from "@/components/Marquee";
 import Footer from "@/components/Footer";
 import NavLinks from "@/components/NavLinks";
+import { ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 
 const notoSerifBengali = Noto_Serif_Bengali({
-  
+
   subsets: ["latin", "bengali"],
 });
 
@@ -26,13 +28,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
 
         <Header />
-      
-        <Marquee/>
+
+        <Marquee />
 
         {children}
+        
+        <ToastContainer position="top-center" autoClose={3000}
+        />
+
+        
 
         <Footer />
-        </body>
+      </body>
     </html>
   );
 }

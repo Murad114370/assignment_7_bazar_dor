@@ -4,6 +4,7 @@ import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import logo from '../../assets/my-logo.png';
 import Link from 'next/link';
+import { toast } from "react-toastify";
 
 const UserInfo = () => {
     const { data: session } = authClient.useSession();
@@ -14,7 +15,19 @@ const UserInfo = () => {
         await authClient.signOut({
             fetchOptions: {
                 onSuccess: () => {
-                    window.location.href = "/sign-in"; // Redirect after sign out
+                    toast.success("সফলভাবে সাইন আউট করা হয়েছে!", {
+                        position: "top-center" // 👈 Centers the success toast
+                    });
+                    
+                    // Give a tiny delay so the toast is visible before reloading/redirecting
+                    setTimeout(() => {
+                        window.location.href = "/";
+                    }, 1000);
+                },
+                onError: (error) => {
+                    toast.error(error.error.message || "সাইন আউট করতে সমস্যা হয়েছে!", {
+                        position: "top-center" // 👈 Centers the error toast if it fails
+                    });
                 },
             },
         });
@@ -74,12 +87,13 @@ const UserInfo = () => {
             ) : (
                 /* Sign In / Sign Up buttons when user is logged out */
                 <div className="flex shrink-0 items-center gap-2 sm:gap-3 lg:gap-4">
-                    <button className="btn btn-sm text-xs sm:btn-md sm:text-sm lg:text-base font-medium">
+                    <Link href={'/signin'}><button className="btn btn-sm text-xs sm:btn-md sm:text-sm lg:text-base font-medium">
                         সাইন ইন
-                    </button>
-                    <button className="btn btn-sm sm:btn-md rounded-lg bg-green-700 hover:bg-green-800 border-none px-3 sm:px-4 text-xs sm:text-sm lg:text-base text-white shadow-[0_8px_12px_-3px_rgba(0,0,0,0.2)] shadow-green-400/50 transition-transform hover:scale-[1.02]">
+                    </button></Link>
+
+                    <Link href={'/signup'}><button className="btn btn-sm sm:btn-md rounded-lg bg-green-700 hover:bg-green-800 border-none px-3 sm:px-4 text-xs sm:text-sm lg:text-base text-white shadow-[0_8px_12px_-3px_rgba(0,0,0,0.2)] shadow-green-400/50 transition-transform hover:scale-[1.02]">
                         সাইন আপ
-                    </button>
+                    </button></Link>
                 </div>
             )}
         </div>

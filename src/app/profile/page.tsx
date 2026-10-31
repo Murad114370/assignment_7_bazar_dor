@@ -2,18 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation"; // 1. Import useRouter
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import logo from '../../../assets/my-logo.png';
+import { toast } from "react-toastify"; // 1. Import toast
 
 const ProfilePage = () => {
     const { data: session } = authClient.useSession();
     const user = session?.user;
-    const router = useRouter(); // 2. Initialize router
+    const router = useRouter();
 
     const [name, setName] = useState("");
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState("");
 
     // Set initial name once user data is loaded
     useEffect(() => {
@@ -27,17 +27,17 @@ const ProfilePage = () => {
         await authClient.signOut({
             fetchOptions: {
                 onSuccess: () => {
-                    router.push("/sign-in");
+                    toast.info("Successfully signed out");
+                    router.push("/signin");
                 },
             },
         });
     };
 
-    // Handle Profile Update & Redirect
+    // Handle Profile Update & Redirect with Toastify
     const handleUpdateName = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setMessage("");
 
         try {
             const { data, error } = await authClient.updateUser({
@@ -45,18 +45,18 @@ const ProfilePage = () => {
             });
 
             if (error) {
-                setMessage("নাম আপডেট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+                toast.error("নাম আপডেট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
             } else {
-                setMessage("ਸফলভাবে নাম আপডেট হয়েছে! রিডাইরেক্ট হচ্ছে...");
+                toast.success("সফলভাবে নাম আপডেট হয়েছে!");
                 
-                // 3. Redirect to homepage ("/") after a brief success message
+                // Redirect to homepage ("/") after a brief delay
                 setTimeout(() => {
                     router.push("/");
                     router.refresh(); // Refreshes server components/navbar data
-                }, 1000); // 1-second delay so they can see the success message
+                }, 1000); 
             }
         } catch (err) {
-            setMessage("একটি ত্রুটি ঘটেছে।");
+            toast.error("একটি ত্রুটি ঘটেছে।");
         } finally {
             setLoading(false);
         }
@@ -118,11 +118,7 @@ const ProfilePage = () => {
                             />
                         </div>
 
-                        {message && (
-                            <p className={`text-sm ${message.includes("সমস্যা") ? "text-red-500" : "text-green-600"}`}>
-                                {message}
-                            </p>
-                        )}
+                        {/* Note: The inline message state has been removed because we are using toast notifications */}
 
                         <button 
                             type="submit"
